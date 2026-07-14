@@ -1,0 +1,86 @@
+/* =========================================================================
+   Vipasa Yoga — Onboarding / profile setup wizard
+   Uses .progress-steps from components.css for the step indicator.
+   Requires design-tokens.css, base.css, components.css loaded first.
+   ========================================================================= */
+
+/* Card that hosts the profile form — the page header/wrap now reuse the
+   standard dashboard .container + .services-hero pattern (see
+   dashboard/bookings.php etc.) instead of a page-specific layout, since this
+   view renders inside the dashboard shell like every other client page. */
+.onboarding-panel {
+  background-color: var(--surface-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+  padding: var(--space-8);
+}
+
+@media (max-width: 639px) {
+  .onboarding-panel { padding: var(--space-5); border-radius: var(--radius-lg); }
+}
+
+.form-section__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+@media (max-width: 639px) {
+  .form-section__grid { grid-template-columns: 1fr; }
+}
+
+.form-section__full { grid-column: 1 / -1; }
+
+/* Selectable option cards (e.g. yoga style / goal preferences) */
+.option-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-default);
+  background-color: var(--surface-card);
+  cursor: pointer;
+  transition: border-color var(--transition-fast), background-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.option-card:hover {
+  border-color: var(--color-primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow);
+}
+
+.option-card.is-selected {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-soft);
+  box-shadow: var(--shadow-glow);
+}
+
+.option-card__title {
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
+}
+
+.option-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+@media (max-width: 639px) {
+  .option-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* Form footer actions (was a sticky per-step wizard nav in an earlier design;
+   the profile page is now one long form, so this just sits at its end). */
+.onboarding-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-top: var(--space-8);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--border-subtle);
+}

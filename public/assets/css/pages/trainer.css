@@ -1,0 +1,111 @@
+/* Trainer portal — calendar-first, unique from Admin's chart-heavy dashboard */
+
+.trainer-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  padding: var(--space-6) var(--space-7);
+  margin-bottom: var(--space-6);
+  border-radius: var(--radius-2xl);
+  border-left: 4px solid var(--vipasa-blue-500);
+  background: var(--gradient-mesh);
+}
+
+.trainer-hero__title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+  margin: 0;
+}
+
+.trainer-hero__subtitle {
+  color: var(--text-muted);
+  font-size: var(--font-size-md);
+  margin: var(--space-1) 0 0;
+}
+
+.trainer-stat-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--space-4);
+  margin-bottom: var(--space-8);
+}
+
+.trainer-stat {
+  padding: var(--space-5);
+  border-radius: var(--radius-xl);
+  background: var(--surface-card);
+  border: 1px solid var(--border-subtle);
+  text-align: center;
+}
+
+.trainer-stat__value {
+  font-family: var(--font-display);
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--vipasa-blue-700);
+}
+
+.trainer-stat__label {
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+  margin-top: var(--space-1);
+}
+
+.trainer-schedule {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-bottom: var(--space-8);
+}
+
+.trainer-schedule-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-lg);
+  background: var(--surface-card);
+  border: 1px solid var(--border-subtle);
+  border-left: 3px solid var(--vipasa-blue-500);
+}
+
+.trainer-schedule-row__time {
+  font-family: var(--font-display);
+  font-weight: var(--font-weight-medium);
+  min-width: 84px;
+}
+
+.trainer-section-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--space-4);
+}
+
+.trainer-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: var(--space-3);
+}
+
+.trainer-gallery__item {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  aspect-ratio: 1;
+}
+
+.trainer-gallery__item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.trainer-gallery__remove {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+}

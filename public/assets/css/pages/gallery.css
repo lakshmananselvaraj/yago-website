@@ -1,0 +1,257 @@
+/* =========================================================================
+   Vipasa Yoga — Gallery page
+   Self-contained: only requires design-tokens.css, base.css and
+   components.css to be loaded first (same convention as landing.css —
+   shared section scaffolding is intentionally re-declared here).
+   ========================================================================= */
+
+.landing-section {
+  padding-block: var(--space-20);
+}
+
+@media (max-width: 639px) {
+  .landing-section { padding-block: var(--space-14); }
+}
+
+.section-heading {
+  max-width: 640px;
+  margin: 0 auto var(--space-10);
+  text-align: center;
+}
+
+.section-heading__eyebrow {
+  display: inline-block;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-accent);
+  margin-bottom: var(--space-3);
+}
+
+.section-heading__title { margin-bottom: var(--space-3); }
+
+.section-heading__subtitle {
+  color: var(--text-muted);
+  font-size: var(--font-size-md);
+}
+
+/* -------------------------------------------------------------------------
+   Hero band + controls
+   ------------------------------------------------------------------------- */
+.gallery-hero {
+  padding-block: var(--space-24) var(--space-8);
+  background: var(--gradient-mesh), var(--surface-bg);
+}
+
+@media (max-width: 639px) {
+  .gallery-hero { padding-block: var(--space-16) var(--space-6); }
+}
+
+.gallery-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.gallery-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.gallery-filters__chip { cursor: pointer; }
+
+.gallery-view-toggle {
+  display: flex;
+  gap: var(--space-1);
+  padding: var(--space-1);
+  background: var(--surface-bg-alt);
+  border-radius: var(--radius-md);
+}
+
+.gallery-view-toggle__btn {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.gallery-view-toggle__btn:hover { color: var(--text-primary); }
+
+.gallery-view-toggle__btn.is-active {
+  background-color: var(--surface-card);
+  color: var(--color-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.gallery-view-toggle__btn svg { width: 18px; height: 18px; }
+
+/* -------------------------------------------------------------------------
+   Grid — default view
+   ------------------------------------------------------------------------- */
+.gallery-section { padding-block: var(--space-8) var(--space-20); }
+
+.gallery-grid[data-view="grid"] {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-5);
+}
+
+@media (max-width: 1023px) {
+  .gallery-grid[data-view="grid"] { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 639px) {
+  .gallery-grid[data-view="grid"] { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3); }
+}
+
+.gallery-grid[data-view="grid"] .gallery-item__trigger {
+  aspect-ratio: 4 / 5;
+}
+
+/* -------------------------------------------------------------------------
+   Masonry — CSS columns, no JS layout library needed
+   ------------------------------------------------------------------------- */
+.gallery-grid[data-view="masonry"] {
+  columns: 4;
+  column-gap: var(--space-5);
+}
+
+.gallery-grid[data-view="masonry"] .gallery-item {
+  break-inside: avoid;
+  margin-bottom: var(--space-5);
+}
+
+.gallery-grid[data-view="masonry"] .gallery-item__trigger {
+  aspect-ratio: auto;
+}
+
+@media (max-width: 1023px) {
+  .gallery-grid[data-view="masonry"] { columns: 3; }
+}
+@media (max-width: 639px) {
+  .gallery-grid[data-view="masonry"] { columns: 2; column-gap: var(--space-3); }
+  .gallery-grid[data-view="masonry"] .gallery-item { margin-bottom: var(--space-3); }
+}
+
+/* -------------------------------------------------------------------------
+   Gallery item — hover zoom + caption
+   ------------------------------------------------------------------------- */
+.gallery-item { display: block; }
+.gallery-item[hidden] { display: none; }
+
+.gallery-item__trigger {
+  position: relative;
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background-color: var(--surface-bg-alt);
+}
+
+.gallery-item__trigger img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-slow);
+}
+
+.gallery-item__trigger:hover img { transform: scale(1.08); }
+
+.gallery-item__zoom {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(11, 11, 11, 0.35);
+  color: #ffffff;
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+
+.gallery-item__trigger:hover .gallery-item__zoom { opacity: 1; }
+.gallery-item__zoom svg { width: 28px; height: 28px; }
+
+.gallery-item__caption {
+  margin-top: var(--space-2);
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+}
+
+/* -------------------------------------------------------------------------
+   Lightbox
+   ------------------------------------------------------------------------- */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-8);
+  background: rgba(0, 0, 0, 0.88);
+  animation: vy-fade-in var(--duration-base) var(--ease-out) both;
+}
+
+.lightbox[hidden] { display: none; }
+
+.lightbox__figure {
+  max-width: min(90vw, 1100px);
+  max-height: 86vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.lightbox__figure img {
+  max-width: 100%;
+  max-height: 78vh;
+  object-fit: contain;
+  border-radius: var(--radius-md);
+}
+
+.lightbox__figure figcaption {
+  color: var(--gray-200);
+  font-size: var(--font-size-sm);
+  text-align: center;
+}
+
+.lightbox__close,
+.lightbox__nav {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  transition: background-color var(--transition-fast);
+}
+
+.lightbox__close:hover,
+.lightbox__nav:hover { background: rgba(255, 255, 255, 0.22); }
+
+.lightbox__close { top: var(--space-6); right: var(--space-6); }
+.lightbox__nav--prev { left: var(--space-6); top: 50%; transform: translateY(-50%); }
+.lightbox__nav--next { right: var(--space-6); top: 50%; transform: translateY(-50%); }
+.lightbox__close svg, .lightbox__nav svg { width: 22px; height: 22px; }
+
+@media (max-width: 639px) {
+  .lightbox { padding: var(--space-4); }
+  .lightbox__close, .lightbox__nav { width: 2.5rem; height: 2.5rem; }
+  .lightbox__close { top: var(--space-3); right: var(--space-3); }
+  .lightbox__nav--prev { left: var(--space-2); }
+  .lightbox__nav--next { right: var(--space-2); }
+}
+
+@keyframes vy-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

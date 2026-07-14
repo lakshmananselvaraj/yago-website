@@ -1,0 +1,530 @@
+/* =========================================================================
+   Vipasa Yoga — Design Tokens
+   Single source of truth for color, spacing, type, radius, shadow, motion
+   and z-index. Every other stylesheet in this system consumes these custom
+   properties instead of hard-coded values.
+
+   Theming model:
+   1. Base values live on :root (light theme is the default/fallback).
+   2. `@media (prefers-color-scheme: dark)` flips :root to dark when the OS
+      is dark and the user has not made an explicit in-app choice.
+   3. `:root[data-theme="dark"]` / `:root[data-theme="light"]` are explicit
+      overrides set by JS (persisted to localStorage) and always win over
+      the OS preference, because attribute-selector rules are declared
+      after the media query block and are equally specific.
+   ========================================================================= */
+
+:root {
+  color-scheme: light;
+
+  /* ---------------------------------------------------------------------
+     Brand palette — raw scales (Vipasa official design system)
+     Primary: Vipasa Blue (calm, trust, professionalism)
+     Accent:  Saffron (warmth, used ONLY for primary CTAs — ~5% of the UI)
+     Tertiary: Mist (neutral blue-gray, gentle highlight / info accents)
+     500/700 (blue) and 100/500/600 (saffron) are the client's exact
+     specified hex values; the rest of each 11-step scale is interpolated
+     around them so every existing --color-* alias below still resolves.
+     --------------------------------------------------------------------- */
+  --vipasa-blue-50:  #eaf3f7; /* client: "Sky Tint" */
+  --vipasa-blue-100: #d6e7ee;
+  --vipasa-blue-200: #aecfdd;
+  --vipasa-blue-300: #82b3cb;
+  --vipasa-blue-400: #4e93b0;
+  --vipasa-blue-500: #2d6a88; /* client: "Secondary Blue" */
+  --vipasa-blue-600: #1f5573;
+  --vipasa-blue-700: #14425e; /* client: "Vipasa Blue" (primary) */
+  --vipasa-blue-800: #0f3349;
+  --vipasa-blue-900: #0b2635;
+  --vipasa-blue-950: #071a24;
+
+  --saffron-50:  #fef7ee;
+  --saffron-100: #fceedc; /* client: "Tint" */
+  --saffron-200: #f8dab8;
+  --saffron-300: #f3c38f;
+  --saffron-400: #eeac66;
+  --saffron-500: #e8963c; /* client: "Saffron" (CTA) */
+  --saffron-600: #c97829; /* client: "Hover" */
+  --saffron-700: #a35f1f;
+  --saffron-800: #7d4a19;
+  --saffron-900: #5c3714;
+  --saffron-950: #3d250d;
+
+  --mist-50:  #f7f9fa; /* client: "Cloud" */
+  --mist-100: #eef1f3;
+  --mist-200: #dde3e6;
+  --mist-300: #c3ccd1;
+  --mist-400: #a5b0b7;
+  --mist-500: #8a939b; /* client: "Mist" */
+  --mist-600: #5b6670; /* client: "Slate" */
+  --mist-700: #47515a;
+  --mist-800: #343b42;
+  --mist-900: #23282d;
+  --mist-950: #1a2733; /* client: "Ink" */
+
+  /* Neutral gray scale — kept true-neutral (not blue-tinted) so it sits
+     cleanly behind the Vipasa Blue/Saffron brand colors and the pure
+     white/near-black surfaces the client's spec calls for by exact hex value. */
+  --gray-0:   #ffffff;
+  --gray-50:  #fafafa;
+  --gray-100: #f0f0f0;
+  --gray-200: #e0e0e0;
+  --gray-300: #c7c7c7;
+  --gray-400: #a3a3a3;
+  --gray-500: #7a7a7a;
+  --gray-600: #5c5c5c;
+  --gray-700: #454545;
+  --gray-800: #2a2a2a;
+  --gray-900: #111111;
+  --gray-950: #0b0b0b;
+  --gray-1000: #000000;
+
+  /* ---------------------------------------------------------------------
+     Semantic / status colors (kept visually distinct from brand greens)
+     --------------------------------------------------------------------- */
+  --color-success-50:  #eefaf2;
+  --color-success-100: #d7f2e0;
+  --color-success-500: #2fa863;
+  --color-success-600: #22824d;
+  --color-success-700: #1c6640;
+
+  --color-warning-50:  #fef8ec;
+  --color-warning-100: #fcecc8;
+  --color-warning-500: #e2a530;
+  --color-warning-600: #bd8321;
+  --color-warning-700: #93641a;
+
+  --color-error-50:  #fdeeee;
+  --color-error-100: #f9d4d4;
+  --color-error-500: #d8514f;
+  --color-error-600: #b53d3b;
+  --color-error-700: #8e2f2e;
+
+  --color-info-50:  #eef3fc;
+  --color-info-100: #d7e3f7;
+  --color-info-500: #4d78c4;
+  --color-info-600: #395f9f;
+  --color-info-700: #2d4b7e;
+
+  /* ---------------------------------------------------------------------
+     Brand aliases — use these in components, not the raw scales above
+     --------------------------------------------------------------------- */
+  --color-primary: var(--vipasa-blue-700);
+  --color-primary-hover: var(--vipasa-blue-800);
+  --color-primary-active: var(--vipasa-blue-900);
+  --color-primary-soft: var(--vipasa-blue-50);
+  --color-primary-contrast: #ffffff;
+
+  /* Saffron CTA — client rule: never overuse, ~5% of the UI, primary
+     action buttons only. Dark text (not white): #E8963C only reaches
+     ~2.4:1 contrast against white, failing WCAG AA even at large-text
+     size — dark Ink text clears 6:1+. */
+  --color-accent: var(--saffron-500);
+  --color-accent-hover: var(--saffron-600);
+  --color-accent-active: var(--saffron-700);
+  --color-accent-soft: var(--saffron-100);
+  --color-accent-contrast: var(--mist-950);
+
+  --color-tertiary: var(--mist-500);
+  --color-tertiary-soft: var(--mist-100);
+
+  --color-success: var(--color-success-500);
+  --color-success-soft: var(--color-success-50);
+  --color-warning: var(--color-warning-500);
+  --color-warning-soft: var(--color-warning-50);
+  --color-error: var(--color-error-500);
+  --color-error-soft: var(--color-error-50);
+  --color-info: var(--color-info-500);
+  --color-info-soft: var(--color-info-50);
+
+  /* Gradients — used for premium CTA buttons, gradient borders, hero glows */
+  --gradient-primary: linear-gradient(135deg, var(--vipasa-blue-500) 0%, var(--vipasa-blue-800) 100%);
+  --gradient-primary-hover: linear-gradient(135deg, var(--vipasa-blue-400) 0%, var(--vipasa-blue-700) 100%);
+  --gradient-accent: linear-gradient(135deg, var(--saffron-400) 0%, var(--saffron-600) 100%);
+  --gradient-border: linear-gradient(135deg, var(--vipasa-blue-500) 0%, var(--saffron-400) 100%);
+  --gradient-mesh: radial-gradient(60% 60% at 20% 20%, rgba(45, 106, 136, 0.14) 0%, transparent 60%),
+                   radial-gradient(50% 50% at 85% 15%, rgba(232, 150, 60, 0.12) 0%, transparent 60%);
+
+  /* ---------------------------------------------------------------------
+     Surfaces
+     --------------------------------------------------------------------- */
+  --surface-bg: #ffffff;
+  --surface-bg-alt: var(--mist-50); /* client: "Cloud" */
+  --surface-card: #ffffff; /* client spec: light-theme cards are White */
+  --surface-elevated: #ffffff;
+  --surface-sunken: var(--mist-100);
+  --input-bg: var(--mist-100);
+  --surface-overlay: rgba(26, 39, 51, 0.45);
+
+  /* Glass surfaces (used sparingly: splash, modals, floating nav) */
+  --surface-glass: rgba(255, 255, 255, 0.6);
+  --surface-glass-strong: rgba(255, 255, 255, 0.78);
+  --surface-glass-border: rgba(255, 255, 255, 0.45);
+  --surface-glass-blur: 20px;
+
+  /* ---------------------------------------------------------------------
+     Text
+     --------------------------------------------------------------------- */
+  --text-primary: var(--mist-950); /* client: "Ink" */
+  --text-secondary: var(--mist-600); /* client: "Slate" */
+  --text-muted: var(--mist-500); /* client: "Mist" */
+  --text-disabled: var(--gray-400);
+  --text-inverse: #ffffff;
+  --text-link: var(--color-primary-hover);
+
+  /* ---------------------------------------------------------------------
+     Borders
+     --------------------------------------------------------------------- */
+  --border-subtle: rgba(26, 39, 51, 0.08);
+  --border-default: rgba(26, 39, 51, 0.14);
+  --border-strong: rgba(26, 39, 51, 0.24);
+  --border-focus: var(--color-primary);
+
+  /* ---------------------------------------------------------------------
+     Spacing scale — 4px base unit
+     --------------------------------------------------------------------- */
+  --space-0: 0;
+  --space-1: 0.25rem;   /* 4px */
+  --space-2: 0.5rem;    /* 8px */
+  --space-3: 0.75rem;   /* 12px */
+  --space-4: 1rem;      /* 16px */
+  --space-5: 1.25rem;   /* 20px */
+  --space-6: 1.5rem;    /* 24px */
+  --space-7: 1.75rem;   /* 28px */
+  --space-8: 2rem;      /* 32px */
+  --space-9: 2.25rem;   /* 36px */
+  --space-10: 2.5rem;   /* 40px */
+  --space-12: 3rem;     /* 48px */
+  --space-14: 3.5rem;   /* 56px */
+  --space-16: 4rem;     /* 64px */
+  --space-20: 5rem;     /* 80px */
+  --space-24: 6rem;     /* 96px */
+  --space-32: 8rem;     /* 128px */
+
+  /* ---------------------------------------------------------------------
+     Radius scale
+     --------------------------------------------------------------------- */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-2xl: 32px;
+  --radius-full: 999px;
+
+  /* ---------------------------------------------------------------------
+     Shadows
+     --------------------------------------------------------------------- */
+  --shadow-sm: 0 1px 2px rgba(26, 39, 51, 0.06), 0 1px 1px rgba(26, 39, 51, 0.04);
+  --shadow-md: 0 4px 10px rgba(26, 39, 51, 0.07), 0 2px 4px rgba(26, 39, 51, 0.05);
+  --shadow-lg: 0 12px 24px rgba(26, 39, 51, 0.10), 0 4px 8px rgba(26, 39, 51, 0.06);
+  --shadow-xl: 0 24px 48px rgba(26, 39, 51, 0.14), 0 8px 16px rgba(26, 39, 51, 0.08);
+  --shadow-glass: 0 8px 32px rgba(26, 39, 51, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  --shadow-focus-ring: 0 0 0 4px rgba(45, 106, 136, 0.28);
+  --shadow-glow: 0 0 0 rgba(45, 106, 136, 0);
+
+  /* ---------------------------------------------------------------------
+     Typography — Poppins (display/headings) + Inter (body/UI), per client spec
+     --------------------------------------------------------------------- */
+  --font-display: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+
+  --font-size-xs: 0.75rem;    /* 12px */
+  --font-size-sm: 0.875rem;   /* 14px */
+  --font-size-base: 1rem;     /* 16px */
+  --font-size-md: 1.125rem;   /* 18px */
+  --font-size-lg: 1.25rem;    /* 20px */
+  --font-size-xl: 1.5rem;     /* 24px */
+  --font-size-2xl: 1.875rem;  /* 30px */
+  --font-size-3xl: 2.25rem;   /* 36px */
+  --font-size-4xl: 3rem;      /* 48px */
+  --font-size-5xl: 3.75rem;   /* 60px */
+
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --leading-tight: 1.2;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.7;
+
+  /* ---------------------------------------------------------------------
+     Motion
+     --------------------------------------------------------------------- */
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+  --duration-slow: 320ms;
+  --duration-slower: 480ms;
+
+  --transition-fast: var(--duration-fast) var(--ease-standard);
+  --transition-base: var(--duration-base) var(--ease-standard);
+  --transition-slow: var(--duration-slow) var(--ease-out);
+
+  /* ---------------------------------------------------------------------
+     Z-index scale
+     --------------------------------------------------------------------- */
+  --z-base: 0;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-nav: 300;
+  --z-fixed: 400;
+  --z-modal-backdrop: 500;
+  --z-modal: 510;
+  --z-toast: 600;
+  --z-confetti: 700;
+  --z-tooltip: 800;
+
+  /* ---------------------------------------------------------------------
+     Dashboard shell (sidebar + topbar) — shared structural tokens,
+     recolored per portal below. Defaults here are the trainer palette.
+     --------------------------------------------------------------------- */
+  --sidebar-width: 264px;
+  --sidebar-width-collapsed: 76px;
+  --sidebar-bg: var(--surface-elevated);
+  --sidebar-text: var(--text-secondary);
+  --sidebar-text-active: var(--text-primary);
+  --sidebar-active-bg: var(--color-primary-soft);
+  --sidebar-active-border: var(--color-primary);
+  --sidebar-border: var(--border-subtle);
+  --topbar-bg: var(--surface-elevated);
+}
+
+/* =========================================================================
+   Portal identity — Admin / Trainer / Client
+   The client's design system is a single unified brand (one blue, one
+   accent, strict color-usage ratios) with no per-role hue — so all three
+   portals share one sidebar/topbar identity. Kept as a [data-portal] hook
+   (rather than deleting it) so a future per-portal accent is still a
+   one-block change if ever requested, without touching the sidebar markup.
+   ========================================================================= */
+[data-portal="admin"],
+[data-portal="trainer"],
+[data-portal="client"] {
+  --sidebar-bg: var(--surface-elevated);
+  --sidebar-text: var(--text-secondary);
+  --sidebar-text-active: var(--text-primary);
+  --sidebar-active-bg: var(--color-primary-soft);
+  --sidebar-active-border: var(--color-primary);
+  --sidebar-border: var(--border-subtle);
+  --topbar-bg: var(--surface-elevated);
+}
+
+/* =========================================================================
+   Dark theme — implicit via OS preference
+   ========================================================================= */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+
+    /* Client-approved dark theme: brand-tinted navy, never pure black. */
+    --color-primary: var(--vipasa-blue-300);
+    --color-primary-hover: var(--vipasa-blue-200);
+    --color-primary-active: var(--vipasa-blue-100);
+    --color-primary-soft: rgba(45, 106, 136, 0.22);
+    --color-primary-contrast: var(--mist-950);
+
+    --color-accent: var(--saffron-500);
+    --color-accent-hover: var(--saffron-600);
+    --color-accent-active: var(--saffron-700);
+    --color-accent-soft: rgba(232, 150, 60, 0.18);
+    --color-accent-contrast: var(--mist-950);
+
+    --color-tertiary: var(--mist-400);
+    --color-tertiary-soft: rgba(165, 176, 183, 0.16);
+
+    --color-success: var(--color-success-500);
+    --color-success-soft: rgba(47, 168, 99, 0.16);
+    --color-warning: var(--color-warning-500);
+    --color-warning-soft: rgba(226, 165, 48, 0.16);
+    --color-error: var(--color-error-500);
+    --color-error-soft: rgba(216, 81, 79, 0.16);
+    --color-info: var(--color-info-500);
+    --color-info-soft: rgba(77, 120, 196, 0.16);
+
+    --gradient-primary: linear-gradient(135deg, var(--vipasa-blue-400) 0%, var(--vipasa-blue-600) 100%);
+    --gradient-primary-hover: linear-gradient(135deg, var(--vipasa-blue-300) 0%, var(--vipasa-blue-500) 100%);
+    --gradient-accent: linear-gradient(135deg, var(--saffron-400) 0%, var(--saffron-600) 100%);
+    --gradient-border: linear-gradient(135deg, var(--vipasa-blue-300) 0%, var(--saffron-400) 100%);
+    --gradient-mesh: radial-gradient(60% 60% at 20% 20%, rgba(45, 106, 136, 0.22) 0%, transparent 60%),
+                     radial-gradient(50% 50% at 85% 15%, rgba(232, 150, 60, 0.14) 0%, transparent 60%);
+
+    --surface-bg: #0f2e42;
+    --surface-bg-alt: #123852;
+    --surface-card: #1b4a66;
+    --surface-elevated: #224f6e;
+    --surface-sunken: #0a2231;
+    --input-bg: #234f6c;
+    --surface-overlay: rgba(15, 46, 66, 0.6);
+
+    --surface-glass: rgba(27, 74, 102, 0.55);
+    --surface-glass-strong: rgba(27, 74, 102, 0.78);
+    --surface-glass-border: rgba(245, 248, 250, 0.14);
+
+    --text-primary: #f5f8fa;
+    --text-secondary: #b7c3cb;
+    --text-muted: #8a9ba8;
+    --text-disabled: #5c707e;
+    --text-inverse: var(--mist-950);
+    --text-link: var(--vipasa-blue-300);
+
+    --border-subtle: rgba(245, 248, 250, 0.06);
+    --border-default: #2d4e63;
+    --border-strong: rgba(245, 248, 250, 0.2);
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.32), 0 1px 1px rgba(0, 0, 0, 0.24);
+    --shadow-md: 0 4px 10px rgba(0, 0, 0, 0.36), 0 2px 4px rgba(0, 0, 0, 0.24);
+    --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.42), 0 4px 8px rgba(0, 0, 0, 0.28);
+    --shadow-xl: 0 24px 48px rgba(0, 0, 0, 0.5), 0 8px 16px rgba(0, 0, 0, 0.32);
+    --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(245, 248, 250, 0.06);
+    --shadow-focus-ring: 0 0 0 4px rgba(130, 179, 203, 0.35);
+    --shadow-glow: 0 0 24px rgba(130, 179, 203, 0.35);
+  }
+}
+
+/* =========================================================================
+   Explicit override: forced dark mode (data-theme="dark")
+   Wins over prefers-color-scheme because JS sets this attribute
+   deliberately; declared after the media query so it always applies.
+   ========================================================================= */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* Client-approved dark theme: brand-tinted navy, never pure black. */
+  --color-primary: var(--vipasa-blue-300);
+  --color-primary-hover: var(--vipasa-blue-200);
+  --color-primary-active: var(--vipasa-blue-100);
+  --color-primary-soft: rgba(45, 106, 136, 0.22);
+  --color-primary-contrast: var(--mist-950);
+
+  --color-accent: var(--saffron-500);
+  --color-accent-hover: var(--saffron-600);
+  --color-accent-active: var(--saffron-700);
+  --color-accent-soft: rgba(232, 150, 60, 0.18);
+  --color-accent-contrast: var(--mist-950);
+
+  --color-tertiary: var(--mist-400);
+  --color-tertiary-soft: rgba(165, 176, 183, 0.16);
+
+  --color-success: var(--color-success-500);
+  --color-success-soft: rgba(47, 168, 99, 0.16);
+  --color-warning: var(--color-warning-500);
+  --color-warning-soft: rgba(226, 165, 48, 0.16);
+  --color-error: var(--color-error-500);
+  --color-error-soft: rgba(216, 81, 79, 0.16);
+  --color-info: var(--color-info-500);
+  --color-info-soft: rgba(77, 120, 196, 0.16);
+
+  --gradient-primary: linear-gradient(135deg, var(--vipasa-blue-400) 0%, var(--vipasa-blue-600) 100%);
+  --gradient-primary-hover: linear-gradient(135deg, var(--vipasa-blue-300) 0%, var(--vipasa-blue-500) 100%);
+  --gradient-accent: linear-gradient(135deg, var(--saffron-400) 0%, var(--saffron-600) 100%);
+  --gradient-border: linear-gradient(135deg, var(--vipasa-blue-300) 0%, var(--saffron-400) 100%);
+  --gradient-mesh: radial-gradient(60% 60% at 20% 20%, rgba(45, 106, 136, 0.22) 0%, transparent 60%),
+                   radial-gradient(50% 50% at 85% 15%, rgba(232, 150, 60, 0.14) 0%, transparent 60%);
+
+  --surface-bg: #0f2e42;
+  --surface-bg-alt: #123852;
+  --surface-card: #1b4a66;
+  --surface-elevated: #224f6e;
+  --surface-sunken: #0a2231;
+  --input-bg: #234f6c;
+  --surface-overlay: rgba(15, 46, 66, 0.6);
+
+  --surface-glass: rgba(27, 74, 102, 0.55);
+  --surface-glass-strong: rgba(27, 74, 102, 0.78);
+  --surface-glass-border: rgba(245, 248, 250, 0.14);
+
+  --text-primary: #f5f8fa;
+  --text-secondary: #b7c3cb;
+  --text-muted: #8a9ba8;
+  --text-disabled: #5c707e;
+  --text-inverse: var(--mist-950);
+  --text-link: var(--vipasa-blue-300);
+
+  --border-subtle: rgba(245, 248, 250, 0.06);
+  --border-default: #2d4e63;
+  --border-strong: rgba(245, 248, 250, 0.2);
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.32), 0 1px 1px rgba(0, 0, 0, 0.24);
+  --shadow-md: 0 4px 10px rgba(0, 0, 0, 0.36), 0 2px 4px rgba(0, 0, 0, 0.24);
+  --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.42), 0 4px 8px rgba(0, 0, 0, 0.28);
+  --shadow-xl: 0 24px 48px rgba(0, 0, 0, 0.5), 0 8px 16px rgba(0, 0, 0, 0.32);
+  --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(245, 248, 250, 0.06);
+  --shadow-focus-ring: 0 0 0 4px rgba(130, 179, 203, 0.35);
+  --shadow-glow: 0 0 24px rgba(130, 179, 203, 0.35);
+}
+
+/* =========================================================================
+   Explicit override: forced light mode (data-theme="light")
+   Forces light tokens even when the OS is set to dark.
+   ========================================================================= */
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  --color-primary: var(--vipasa-blue-700);
+  --color-primary-hover: var(--vipasa-blue-800);
+  --color-primary-active: var(--vipasa-blue-900);
+  --color-primary-soft: var(--vipasa-blue-50);
+  --color-primary-contrast: #ffffff;
+
+  --color-accent: var(--saffron-500);
+  --color-accent-hover: var(--saffron-600);
+  --color-accent-active: var(--saffron-700);
+  --color-accent-soft: var(--saffron-100);
+  --color-accent-contrast: var(--mist-950);
+
+  --color-tertiary: var(--mist-500);
+  --color-tertiary-soft: var(--mist-100);
+
+  --color-success: var(--color-success-500);
+  --color-success-soft: var(--color-success-50);
+  --color-warning: var(--color-warning-500);
+  --color-warning-soft: var(--color-warning-50);
+  --color-error: var(--color-error-500);
+  --color-error-soft: var(--color-error-50);
+  --color-info: var(--color-info-500);
+  --color-info-soft: var(--color-info-50);
+
+  --gradient-primary: linear-gradient(135deg, var(--vipasa-blue-500) 0%, var(--vipasa-blue-800) 100%);
+  --gradient-primary-hover: linear-gradient(135deg, var(--vipasa-blue-400) 0%, var(--vipasa-blue-700) 100%);
+  --gradient-accent: linear-gradient(135deg, var(--saffron-400) 0%, var(--saffron-600) 100%);
+  --gradient-border: linear-gradient(135deg, var(--vipasa-blue-500) 0%, var(--saffron-400) 100%);
+  --gradient-mesh: radial-gradient(60% 60% at 20% 20%, rgba(45, 106, 136, 0.14) 0%, transparent 60%),
+                   radial-gradient(50% 50% at 85% 15%, rgba(232, 150, 60, 0.12) 0%, transparent 60%);
+
+  --surface-bg: #ffffff;
+  --surface-bg-alt: var(--mist-50);
+  --surface-card: #ffffff;
+  --surface-elevated: #ffffff;
+  --surface-sunken: var(--mist-100);
+  --input-bg: var(--mist-100);
+  --surface-overlay: rgba(26, 39, 51, 0.45);
+
+  --surface-glass: rgba(255, 255, 255, 0.6);
+  --surface-glass-strong: rgba(255, 255, 255, 0.78);
+  --surface-glass-border: rgba(255, 255, 255, 0.45);
+
+  --text-primary: var(--mist-950);
+  --text-secondary: var(--mist-600);
+  --text-muted: var(--mist-500);
+  --text-disabled: var(--gray-400);
+  --text-inverse: #ffffff;
+  --text-link: var(--color-primary-hover);
+
+  --border-subtle: rgba(26, 39, 51, 0.08);
+  --border-default: rgba(26, 39, 51, 0.14);
+  --border-strong: rgba(26, 39, 51, 0.24);
+
+  --shadow-sm: 0 1px 2px rgba(26, 39, 51, 0.06), 0 1px 1px rgba(26, 39, 51, 0.04);
+  --shadow-md: 0 4px 10px rgba(26, 39, 51, 0.07), 0 2px 4px rgba(26, 39, 51, 0.05);
+  --shadow-lg: 0 12px 24px rgba(26, 39, 51, 0.10), 0 4px 8px rgba(26, 39, 51, 0.06);
+  --shadow-xl: 0 24px 48px rgba(26, 39, 51, 0.14), 0 8px 16px rgba(26, 39, 51, 0.08);
+  --shadow-glass: 0 8px 32px rgba(26, 39, 51, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  --shadow-focus-ring: 0 0 0 4px rgba(45, 106, 136, 0.28);
+  --shadow-glow: 0 0 0 rgba(45, 106, 136, 0);
+}

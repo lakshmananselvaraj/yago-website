@@ -1,0 +1,363 @@
+/* =========================================================================
+   Vipasa Yoga — Instructors directory & detail profile
+   Requires design-tokens.css, base.css, components.css loaded first.
+   ========================================================================= */
+
+.instructors-page { padding-block: var(--space-8) var(--space-16); }
+
+/* Re-declared here (not just in services.css) since this page's own view
+   uses the same hero markup contract but only loads instructors.css. */
+.services-hero {
+  text-align: center;
+  max-width: 640px;
+  margin: 0 auto var(--space-10);
+  padding-block: var(--space-6);
+  background: var(--gradient-mesh);
+  border-radius: var(--radius-2xl);
+}
+
+.services-hero__title {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--space-3);
+}
+
+.services-hero__subtitle {
+  color: var(--text-muted);
+  font-size: var(--font-size-md);
+}
+
+.services-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-bottom: var(--space-8);
+}
+
+/* Directory grid */
+.instructor-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-6);
+}
+
+@media (max-width: 639px) {
+  .instructor-grid { grid-template-columns: 1fr; gap: var(--space-4); }
+}
+
+.instructor-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-3);
+  padding: var(--space-6);
+  background-color: var(--surface-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.instructor-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg), var(--shadow-glow);
+}
+
+.instructor-card__avatar {
+  width: 6rem;
+  height: 6rem;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: var(--color-primary-soft);
+}
+
+.instructor-card__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.instructor-card__name {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+}
+
+.instructor-card__specialty {
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+}
+
+.instructor-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  justify-content: center;
+}
+
+.instructor-card__footer {
+  width: 100%;
+  /* Pushes to the bottom of the card regardless of how much tag/text content
+     sits above it, so "View profile" lines up across every card in a row
+     even when one instructor has more specialty chips than another. */
+  margin-top: auto;
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Package card — used by the "Choose a package" booking modal on this page
+   (re-declared here, not just in services.css, since the modal's JS injects
+   this markup on the instructor profile page, which only loads instructors.css). */
+.package-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: var(--space-6);
+  background-color: var(--surface-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
+}
+
+.package-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg), var(--shadow-glow);
+}
+
+.package-card__name {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.package-card__price {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-1);
+  margin-block: var(--space-3);
+}
+
+.package-card__price-value {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+}
+
+.package-card__features {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-block: var(--space-5);
+  flex: 1;
+}
+
+.package-card__feature {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+/* -------------------------------------------------------------------------
+   Instructor detail profile
+   ------------------------------------------------------------------------- */
+.instructor-profile__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  padding: var(--space-8);
+  background: var(--gradient-mesh), var(--surface-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--space-8);
+}
+
+@media (max-width: 639px) {
+  .instructor-profile__header {
+    flex-direction: column;
+    text-align: center;
+    padding: var(--space-6);
+  }
+}
+
+.instructor-profile__avatar {
+  width: 7rem;
+  height: 7rem;
+  border-radius: 50%;
+  overflow: hidden;
+  flex: none;
+  border: 3px solid var(--surface-card);
+  box-shadow: var(--shadow-md);
+  position: relative;
+}
+
+.instructor-profile__avatar::before {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  padding: 3px;
+  background: var(--gradient-border);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  z-index: -1;
+}
+
+.instructor-profile__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.instructor-profile__name {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+}
+
+.instructor-profile__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+  margin-top: var(--space-2);
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+}
+
+@media (max-width: 639px) {
+  .instructor-profile__meta { justify-content: center; }
+}
+
+.instructor-profile__certificates {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+@media (max-width: 639px) {
+  .instructor-profile__certificates { justify-content: center; }
+}
+
+.instructor-profile__actions {
+  margin-left: auto;
+  display: flex;
+  gap: var(--space-3);
+}
+
+@media (max-width: 639px) {
+  .instructor-profile__actions {
+    margin-left: 0;
+    flex-direction: column;
+    width: 100%;
+  }
+  .instructor-profile__actions .btn { width: 100%; }
+}
+
+/* Main content layout: bio + reviews (left) / availability calendar (right) */
+.instructor-profile__layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--space-8);
+  align-items: start;
+}
+
+@media (max-width: 1023px) {
+  .instructor-profile__layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.instructor-profile__main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.instructor-profile__section {
+  background-color: var(--surface-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-6);
+}
+
+.instructor-profile__section-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--space-4);
+}
+
+.instructor-profile__bio {
+  color: var(--text-secondary);
+  line-height: var(--leading-relaxed);
+}
+
+/* Reviews list */
+.review-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.review-item {
+  display: flex;
+  gap: var(--space-4);
+  padding-bottom: var(--space-5);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.review-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.review-item__body { flex: 1; }
+
+.review-item__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-1);
+}
+
+.review-item__name {
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-sm);
+}
+
+.review-item__date {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+}
+
+.review-item__text {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin-top: var(--space-2);
+}
+
+/* Sidebar: sticky availability calendar */
+.instructor-profile__sidebar {
+  position: sticky;
+  top: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+@media (max-width: 1023px) {
+  .instructor-profile__sidebar {
+    position: static;
+  }
+}

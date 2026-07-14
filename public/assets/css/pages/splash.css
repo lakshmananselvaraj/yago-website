@@ -1,0 +1,150 @@
+/* =========================================================================
+   Vipasa Yoga — Splash / launch screen
+   Full-viewport centered logo, loading bar, tagline. Requires
+   design-tokens.css, base.css (and optionally components.css) loaded first.
+   ========================================================================= */
+
+.splash {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-fixed);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-8);
+  text-align: center;
+  padding: var(--space-6);
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 20% 20%, var(--color-primary-soft) 0%, transparent 55%),
+    radial-gradient(circle at 80% 30%, var(--color-tertiary-soft) 0%, transparent 50%),
+    radial-gradient(circle at 50% 90%, var(--color-accent-soft) 0%, transparent 55%),
+    var(--surface-bg);
+  transition: opacity var(--duration-slower) var(--ease-out), visibility var(--duration-slower);
+}
+
+/* Soft ambient glow orbs drifting behind the logo */
+.splash::before,
+.splash::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.5;
+  animation: vy-splash-drift 12s ease-in-out infinite alternate;
+}
+
+.splash::before {
+  width: 320px;
+  height: 320px;
+  top: -80px;
+  left: -60px;
+  background: var(--color-primary);
+}
+
+.splash::after {
+  width: 260px;
+  height: 260px;
+  bottom: -60px;
+  right: -40px;
+  background: var(--color-accent);
+  animation-delay: 2s;
+}
+
+@keyframes vy-splash-drift {
+  from { transform: translate(0, 0) scale(1); }
+  to { transform: translate(30px, 20px) scale(1.08); }
+}
+
+.splash__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-6);
+}
+
+.splash__logo {
+  width: 88px;
+  height: 88px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-2xl);
+  background-color: var(--surface-glass);
+  border: 1px solid var(--surface-glass-border);
+  box-shadow: var(--shadow-glass);
+  backdrop-filter: blur(var(--surface-glass-blur));
+  -webkit-backdrop-filter: blur(var(--surface-glass-blur));
+  animation: vy-logo-breathe 3.2s ease-in-out infinite;
+}
+
+.splash__logo svg,
+.splash__logo img {
+  width: 48px;
+  height: 48px;
+}
+
+@keyframes vy-logo-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}
+
+.splash__wordmark {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+.splash__tagline {
+  font-size: var(--font-size-base);
+  color: var(--text-muted);
+  max-width: 320px;
+}
+
+/* Loading bar */
+.splash__loader {
+  width: 200px;
+  height: 4px;
+  border-radius: var(--radius-full);
+  background-color: var(--surface-sunken);
+  overflow: hidden;
+}
+
+.splash__loader-fill {
+  height: 100%;
+  width: 40%;
+  border-radius: var(--radius-full);
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+  animation: vy-loader-slide 1.4s var(--ease-standard) infinite;
+}
+
+@keyframes vy-loader-slide {
+  0% { transform: translateX(-120%); }
+  100% { transform: translateX(340%); }
+}
+
+/* Fade-out hand-off to the next screen (JS toggles this class, then
+   removes the splash node after the transition ends) */
+.splash.is-leaving {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .splash::before,
+  .splash::after,
+  .splash__logo,
+  .splash__loader-fill {
+    animation: none;
+  }
+}
+
+@media (max-width: 639px) {
+  .splash__logo { width: 72px; height: 72px; }
+  .splash__wordmark { font-size: var(--font-size-xl); }
+}

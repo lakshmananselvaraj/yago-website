@@ -1,0 +1,177 @@
+/* =========================================================================
+   Vipasa Yoga — Auth screens (login / signup / forgot-password / OTP)
+   Requires design-tokens.css, base.css, components.css loaded first.
+   ========================================================================= */
+
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6);
+  background:
+    radial-gradient(circle at 15% 10%, var(--color-primary-soft) 0%, transparent 45%),
+    radial-gradient(circle at 85% 90%, var(--color-accent-soft) 0%, transparent 45%),
+    var(--surface-bg);
+}
+
+/* Simple centered-card layout (login / forgot-password / OTP) */
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  background-color: var(--surface-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  padding: var(--space-8);
+}
+
+.auth-card__logo {
+  width: 3rem;
+  height: 3rem;
+  border-radius: var(--radius-lg);
+  background-color: var(--color-primary-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-5);
+}
+
+.auth-card__title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--space-2);
+}
+
+.auth-card__subtitle {
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--space-6);
+}
+
+.auth-card__footer {
+  margin-top: var(--space-6);
+  text-align: center;
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+}
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-block: var(--space-5);
+  color: var(--text-muted);
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background-color: var(--border-subtle);
+}
+
+.auth-social {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* -------------------------------------------------------------------------
+   Split-screen layout — branding illustration side + form side.
+   Collapses to a single column (form only, illustration hidden) on mobile.
+   ------------------------------------------------------------------------- */
+.auth-split {
+  width: 100%;
+  max-width: 1080px;
+  min-height: 640px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background-color: var(--surface-card);
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-xl);
+  overflow: hidden;
+}
+
+.auth-split__branding {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: var(--space-10);
+  color: #ffffff;
+  background: linear-gradient(155deg, var(--vipasa-blue-600), var(--vipasa-blue-800) 60%, var(--saffron-700));
+  overflow: hidden;
+}
+
+.auth-split__branding-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+.auth-split__branding::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  /* Strong scrim at both ends for guaranteed text contrast regardless of what
+     tones happen to sit behind the brand name / quote in the photo — don't
+     rely on a gradient tuned to one specific image. */
+  background:
+    linear-gradient(0deg, rgba(15, 46, 66, 0.88) 0%, rgba(15, 46, 66, 0.35) 35%, rgba(15, 46, 66, 0.15) 55%, rgba(15, 46, 66, 0.55) 100%),
+    radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.1), transparent 55%);
+}
+
+.auth-split__branding-content {
+  position: relative;
+  z-index: 2;
+}
+
+.auth-split__branding-content .splash__wordmark {
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.45);
+}
+
+.auth-split__quote {
+  position: relative;
+  z-index: 2;
+  font-size: var(--font-size-lg);
+  line-height: var(--leading-relaxed);
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.45);
+}
+
+.auth-split__form-side {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-10);
+}
+
+.auth-split__form-inner {
+  width: 100%;
+  max-width: 360px;
+}
+
+@media (max-width: 1023px) {
+  .auth-split {
+    grid-template-columns: 1fr;
+    max-width: 480px;
+  }
+  .auth-split__branding { display: none; }
+  .auth-split__form-side { padding: var(--space-8); }
+}
+
+@media (max-width: 639px) {
+  .auth-page { padding: var(--space-4); }
+  .auth-card { padding: var(--space-6); border-radius: var(--radius-lg); }
+  .auth-split__form-side { padding: var(--space-6); }
+}
+

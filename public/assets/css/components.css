@@ -1,0 +1,1301 @@
+/* =========================================================================
+   Vipasa Yoga — Components
+   Reusable, class-based component styles. Requires design-tokens.css and
+   base.css to be loaded first. Class names are stable and intended to be
+   referenced directly from PHP server-rendered views.
+   ========================================================================= */
+
+/* =========================================================================
+   Buttons — .btn
+   ========================================================================= */
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-5);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  line-height: 1;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  white-space: nowrap;
+  user-select: none;
+  overflow: hidden;
+  transition: background-color var(--transition-fast), border-color var(--transition-fast),
+    color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+/* Ripple — spawned by modules/ripple.js on pointerdown, positioned inline
+   via style.left/top/width/height, removed after one animation cycle. */
+.btn__ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.25;
+  transform: scale(0);
+  pointer-events: none;
+  animation: vy-ripple 500ms var(--ease-out);
+}
+
+@keyframes vy-ripple {
+  to {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+.btn:active {
+  transform: translateY(1px) scale(0.99);
+}
+
+.btn:disabled,
+.btn.is-disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Variants */
+.btn-primary {
+  background: var(--gradient-primary);
+  color: var(--color-primary-contrast);
+  box-shadow: var(--shadow-sm);
+}
+.btn-primary:hover:not(:disabled) {
+  background: var(--gradient-primary-hover);
+  box-shadow: var(--shadow-md), var(--shadow-glow);
+  transform: translateY(-1px);
+}
+.btn-primary:active:not(:disabled) {
+  filter: brightness(0.96);
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  background-color: var(--surface-card);
+  color: var(--text-primary);
+  border-color: var(--border-default);
+  box-shadow: var(--shadow-sm);
+}
+.btn-secondary:hover:not(:disabled) {
+  border-color: var(--border-strong);
+  background-color: var(--surface-bg-alt);
+}
+
+.btn-ghost {
+  background-color: transparent;
+  color: var(--text-primary);
+}
+.btn-ghost:hover:not(:disabled) {
+  background-color: var(--surface-bg-alt);
+}
+
+.btn-accent {
+  background: var(--gradient-accent);
+  color: var(--color-accent-contrast);
+  box-shadow: var(--shadow-sm);
+}
+.btn-accent:hover:not(:disabled) {
+  filter: brightness(1.05);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.btn-danger {
+  background-color: var(--color-error);
+  color: #ffffff;
+  box-shadow: var(--shadow-sm);
+}
+.btn-danger:hover:not(:disabled) {
+  background-color: var(--color-error-600);
+}
+
+.btn-link {
+  background: none;
+  color: var(--text-link);
+  padding-inline: 0;
+  border-radius: 0;
+}
+.btn-link:hover:not(:disabled) {
+  text-decoration: underline;
+}
+
+/* Sizes */
+.btn-sm {
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--font-size-sm);
+  border-radius: var(--radius-sm);
+}
+.btn-lg {
+  padding: var(--space-4) var(--space-6);
+  font-size: var(--font-size-md);
+  border-radius: var(--radius-lg);
+}
+.btn-icon {
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  aspect-ratio: 1 / 1;
+}
+.btn-block { width: 100%; }
+
+/* Loading state with spinner */
+.btn.is-loading {
+  color: transparent !important;
+  pointer-events: none;
+}
+
+.btn.is-loading::after {
+  content: "";
+  position: absolute;
+  width: 1.1em;
+  height: 1.1em;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #ffffff;
+  animation: vy-spin 0.7s linear infinite;
+}
+
+.btn-secondary.is-loading::after,
+.btn-ghost.is-loading::after {
+  border-color: var(--border-default);
+  border-top-color: var(--color-primary);
+}
+
+@keyframes vy-spin {
+  to { transform: rotate(360deg); }
+}
+
+.spinner {
+  display: inline-block;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+  border: 2px solid var(--border-default);
+  border-top-color: var(--color-primary);
+  animation: vy-spin 0.7s linear infinite;
+}
+.spinner-lg { width: 2rem; height: 2rem; border-width: 3px; }
+
+/* =========================================================================
+   Cards — .card
+   ========================================================================= */
+.card {
+  background-color: var(--surface-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-6);
+  transition: box-shadow var(--transition-base), transform var(--transition-base),
+    border-color var(--transition-base);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+  border-color: var(--border-default);
+}
+
+/* Generic hover-lift utility — for any element that should read as
+   interactive/clickable (package cards, instructor cards, gallery tiles)
+   without pulling in the full .card look. */
+.hover-lift {
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card:hover,
+  .hover-lift:hover {
+    transform: none;
+  }
+}
+
+.card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.card__title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+}
+
+.card__subtitle {
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+  margin-top: var(--space-1);
+}
+
+.card__body { color: var(--text-secondary); }
+
+.card__footer {
+  margin-top: var(--space-5);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg), var(--shadow-glow);
+  border-color: var(--border-default);
+}
+
+/* Glassmorphism variant — used tastefully (splash, modals, floating nav) */
+.card-glass {
+  background-color: var(--surface-glass);
+  border: 1px solid var(--surface-glass-border);
+  box-shadow: var(--shadow-glass);
+  backdrop-filter: blur(var(--surface-glass-blur)) saturate(160%);
+  -webkit-backdrop-filter: blur(var(--surface-glass-blur)) saturate(160%);
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+  .card-glass {
+    background-color: var(--surface-glass-strong);
+  }
+}
+
+.card-flat {
+  box-shadow: none;
+  border-color: var(--border-default);
+}
+
+.card-compact { padding: var(--space-4); }
+
+/* Gradient-border variant — a 1px emerald→gold hairline, used sparingly for
+   "featured"/premium cards (e.g. a highlighted package). Double-background
+   trick: inner layer paints the surface, outer layer paints the gradient,
+   the transparent border is what lets the outer layer show through as a
+   ring. */
+.card-gradient-border {
+  border: 1px solid transparent;
+  background-image: linear-gradient(var(--surface-card), var(--surface-card)), var(--gradient-border);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+}
+
+/* =========================================================================
+   Badges / Chips — .badge / .chip
+   ========================================================================= */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  border-radius: var(--radius-full);
+  background-color: var(--surface-bg-alt);
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.badge::before {
+  content: "";
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background-color: currentColor;
+}
+
+.badge-success { background-color: var(--color-success-soft); color: var(--color-success-700, var(--color-success)); }
+.badge-warning { background-color: var(--color-warning-soft); color: var(--color-warning-700, var(--color-warning)); }
+.badge-error   { background-color: var(--color-error-soft);   color: var(--color-error-700, var(--color-error)); }
+.badge-info    { background-color: var(--color-info-soft);    color: var(--color-info-700, var(--color-info)); }
+.badge-neutral { background-color: var(--surface-bg-alt); color: var(--text-secondary); }
+
+/* Booking-status specific aliases so PHP views can use semantic names */
+.badge-confirmed { background-color: var(--color-success-soft); color: var(--color-success-600); }
+.badge-pending   { background-color: var(--color-warning-soft); color: var(--color-warning-600); }
+.badge-cancelled { background-color: var(--color-error-soft);   color: var(--color-error-600); }
+.badge-completed { background-color: var(--surface-bg-alt);     color: var(--text-secondary); }
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  border-radius: var(--radius-full);
+  background-color: var(--surface-card);
+  border: 1px solid var(--border-default);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.chip:hover { border-color: var(--border-strong); }
+
+.chip.is-selected {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-primary-contrast);
+}
+
+.chip:disabled,
+.chip.is-disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+
+/* =========================================================================
+   Rating stars — .rating-stars
+   ========================================================================= */
+.rating-stars {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--color-warning);
+}
+
+.rating-stars svg,
+.rating-stars .star {
+  width: 1rem;
+  height: 1rem;
+  fill: currentColor;
+}
+
+.rating-stars .star.is-empty {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  color: var(--border-strong);
+}
+
+.rating-stars__value {
+  margin-left: var(--space-1);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+}
+
+.rating-stars__count {
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+}
+
+/* =========================================================================
+   Avatar — .avatar
+   ========================================================================= */
+.avatar {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  background-color: var(--color-primary-soft);
+  color: var(--color-primary-active, var(--color-primary));
+  font-weight: var(--font-weight-semibold);
+  flex: none;
+  border: 2px solid var(--surface-card);
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-xs { width: 1.5rem; height: 1.5rem; font-size: var(--font-size-xs); }
+.avatar-sm { width: 2rem; height: 2rem; font-size: var(--font-size-xs); }
+.avatar-md { width: 2.5rem; height: 2.5rem; font-size: var(--font-size-sm); }
+.avatar-lg { width: 3.5rem; height: 3.5rem; font-size: var(--font-size-md); }
+.avatar-xl { width: 5rem; height: 5rem; font-size: var(--font-size-xl); }
+.avatar-2xl { width: 7rem; height: 7rem; font-size: var(--font-size-2xl); }
+
+.avatar__status {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 0.65rem;
+  height: 0.65rem;
+  border-radius: 50%;
+  border: 2px solid var(--surface-card);
+  background-color: var(--color-success);
+}
+
+.avatar-group {
+  display: flex;
+}
+.avatar-group .avatar {
+  margin-left: -0.6rem;
+}
+.avatar-group .avatar:first-child {
+  margin-left: 0;
+}
+
+/* =========================================================================
+   Toasts — .toast / .toast-container
+   ========================================================================= */
+.toast-container {
+  position: fixed;
+  top: var(--space-5);
+  right: var(--space-5);
+  z-index: var(--z-toast);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: min(380px, calc(100vw - var(--space-8)));
+  pointer-events: none;
+}
+
+@media (max-width: 639px) {
+  .toast-container {
+    top: auto;
+    bottom: var(--space-5);
+    right: var(--space-4);
+    left: var(--space-4);
+    width: auto;
+  }
+}
+
+.toast {
+  pointer-events: auto;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  background-color: var(--surface-elevated);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-lg);
+  animation: vy-toast-in var(--duration-base) var(--ease-spring) both;
+}
+
+.toast.is-leaving {
+  animation: vy-toast-out var(--duration-base) var(--ease-in) both;
+}
+
+@keyframes vy-toast-in {
+  from { opacity: 0; transform: translateX(24px) scale(0.96); }
+  to { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+@keyframes vy-toast-out {
+  from { opacity: 1; transform: translateX(0) scale(1); }
+  to { opacity: 0; transform: translateX(24px) scale(0.96); }
+}
+
+@media (max-width: 639px) {
+  @keyframes vy-toast-in {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes vy-toast-out {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(16px); }
+  }
+}
+
+.toast__icon {
+  flex: none;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  background-color: var(--color-info);
+}
+
+.toast__body { flex: 1; }
+
+.toast__title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+}
+
+.toast__message {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin-top: var(--space-1);
+}
+
+.toast__close {
+  flex: none;
+  color: var(--text-muted);
+}
+
+.toast-success { border-left: 3px solid var(--color-success); }
+.toast-success .toast__icon { background-color: var(--color-success); }
+.toast-error { border-left: 3px solid var(--color-error); }
+.toast-error .toast__icon { background-color: var(--color-error); }
+.toast-warning { border-left: 3px solid var(--color-warning); }
+.toast-warning .toast__icon { background-color: var(--color-warning); }
+.toast-info { border-left: 3px solid var(--color-info); }
+.toast-info .toast__icon { background-color: var(--color-info); }
+
+/* =========================================================================
+   Skeleton loading placeholders — .skeleton
+   ========================================================================= */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--surface-sunken);
+  border-radius: var(--radius-sm);
+}
+
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.55) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: vy-shimmer 1.6s ease-in-out infinite;
+}
+
+@media (prefers-color-scheme: dark) {
+  .skeleton::after {
+    background-image: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.08) 50%,
+      rgba(255, 255, 255, 0) 100%
+    );
+  }
+}
+
+:root[data-theme="dark"] .skeleton::after {
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+}
+
+:root[data-theme="light"] .skeleton::after {
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.55) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+}
+
+@keyframes vy-shimmer {
+  100% { transform: translateX(100%); }
+}
+
+.skeleton-text {
+  height: 0.85em;
+  width: 100%;
+  border-radius: var(--radius-full);
+  margin-bottom: var(--space-2);
+}
+.skeleton-text.w-60 { width: 60%; }
+.skeleton-text.w-40 { width: 40%; }
+.skeleton-text.w-80 { width: 80%; }
+
+.skeleton-avatar {
+  width: 3rem;
+  height: 3rem;
+  border-radius: var(--radius-full);
+}
+
+.skeleton-block {
+  width: 100%;
+  height: 8rem;
+  border-radius: var(--radius-lg);
+}
+
+.skeleton-card {
+  padding: var(--space-6);
+  border-radius: var(--radius-lg);
+  background-color: var(--surface-card);
+  border: 1px solid var(--border-subtle);
+}
+
+/* =========================================================================
+   Modal — .modal / .modal-overlay
+   Glass backdrop over content; dialog panel is a solid surface for
+   legibility, the backdrop itself carries the glass treatment.
+   ========================================================================= */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal-backdrop);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  background-color: var(--surface-overlay);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  animation: vy-fade-in var(--duration-base) var(--ease-out) both;
+}
+
+@keyframes vy-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal {
+  position: relative;
+  z-index: var(--z-modal);
+  width: 100%;
+  max-width: 480px;
+  max-height: calc(100vh - var(--space-8));
+  overflow-y: auto;
+  background-color: var(--surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  padding: var(--space-8);
+  animation: vy-modal-in var(--duration-slow) var(--ease-spring) both;
+}
+
+.modal-sm { max-width: 380px; }
+.modal-lg { max-width: 680px; }
+.modal-full { max-width: 960px; }
+
+@keyframes vy-modal-in {
+  from { opacity: 0; transform: translateY(16px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.modal-glass {
+  background-color: var(--surface-glass-strong);
+  backdrop-filter: blur(var(--surface-glass-blur)) saturate(160%);
+  -webkit-backdrop-filter: blur(var(--surface-glass-blur)) saturate(160%);
+  box-shadow: var(--shadow-glass);
+}
+
+.modal__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-5);
+}
+
+.modal__title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+}
+
+.modal__close {
+  flex: none;
+  color: var(--text-muted);
+  padding: var(--space-2);
+  border-radius: var(--radius-full);
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+.modal__close:hover {
+  background-color: var(--surface-bg-alt);
+  color: var(--text-primary);
+}
+
+.modal__body { color: var(--text-secondary); }
+
+.modal__footer {
+  margin-top: var(--space-6);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-3);
+}
+
+@media (max-width: 639px) {
+  .modal {
+    max-width: 100%;
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+  }
+}
+
+/* =========================================================================
+   Confetti canvas overlay
+   Positioning only — drawing/animation logic lives in JS.
+   ========================================================================= */
+.confetti-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: var(--z-confetti);
+  pointer-events: none;
+}
+
+/* =========================================================================
+   Form groups with floating labels
+   ========================================================================= */
+.form-group {
+  position: relative;
+  margin-bottom: var(--space-5);
+}
+
+.form-group__control {
+  width: 100%;
+  padding: var(--space-6) var(--space-5) var(--space-3);
+  background-color: var(--input-bg);
+  border: 2px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  color: var(--text-primary);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.form-group__control:focus-visible {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-focus-ring);
+}
+
+.form-group__control:disabled {
+  background-color: var(--input-bg);
+  color: var(--text-muted);
+  border-color: var(--border-subtle);
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Browser autofill (e.g. a saved Chrome password) paints its own forced
+   yellow/blue background and doesn't reliably trigger :placeholder-shown the
+   way typing does — without this, the label never floats up and sits
+   overlapping the autofilled value. The huge transition-delay is the
+   standard trick to swap the autofill background for ours without a flash. */
+.form-group__control:-webkit-autofill,
+.form-group__control:-webkit-autofill:hover,
+.form-group__control:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--text-primary);
+  -webkit-box-shadow: 0 0 0 1000px var(--input-bg) inset;
+  box-shadow: 0 0 0 1000px var(--input-bg) inset;
+  transition: background-color 600000s 0s, color 600000s 0s;
+}
+
+.form-group__label {
+  position: absolute;
+  left: var(--space-4);
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: var(--font-size-base);
+  color: var(--text-muted);
+  pointer-events: none;
+  transform-origin: left top;
+  transition: transform var(--transition-fast), color var(--transition-fast), top var(--transition-fast);
+  background-color: transparent;
+  margin-bottom: 0;
+}
+
+.form-group__control:focus ~ .form-group__label,
+.form-group__control:not(:placeholder-shown) ~ .form-group__label,
+.form-group__control.has-value ~ .form-group__label,
+.form-group__control:-webkit-autofill ~ .form-group__label {
+  top: 0.85rem;
+  transform: translateY(-50%) scale(0.78);
+  color: var(--color-primary);
+}
+
+.form-group__hint {
+  margin-top: var(--space-2);
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+}
+
+.form-group__error {
+  margin-top: var(--space-2);
+  font-size: var(--font-size-xs);
+  color: var(--color-error);
+}
+
+.form-group.has-error .form-group__control {
+  border-color: var(--color-error);
+}
+.form-group.has-error .form-group__label {
+  color: var(--color-error);
+}
+
+/* =========================================================================
+   Calendar grid — .calendar
+   ========================================================================= */
+.calendar {
+  background-color: var(--surface-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+}
+
+.calendar__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-4);
+}
+
+.calendar__title {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+}
+
+.calendar__nav {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.calendar__nav-btn {
+  width: 2rem;
+  height: 2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  color: var(--text-secondary);
+  transition: background-color var(--transition-fast);
+}
+.calendar__nav-btn:hover {
+  background-color: var(--surface-bg-alt);
+}
+
+.calendar__weekdays,
+.calendar__grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: var(--space-1);
+}
+
+.calendar__weekdays {
+  margin-bottom: var(--space-2);
+}
+
+.calendar__weekday {
+  text-align: center;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-muted);
+  padding-block: var(--space-1);
+  text-transform: uppercase;
+}
+
+.calendar__day {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-sm);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+}
+
+.calendar__day:hover:not(.is-unavailable):not(.is-past) {
+  background-color: var(--color-primary-soft);
+}
+
+.calendar__day.is-outside {
+  color: var(--text-disabled);
+}
+
+.calendar__day.is-today {
+  font-weight: var(--font-weight-bold);
+  box-shadow: inset 0 0 0 1.5px var(--color-primary);
+}
+
+.calendar__day.is-selected {
+  background-color: var(--color-primary);
+  color: var(--color-primary-contrast);
+  transform: scale(1.04);
+}
+
+.calendar__day.is-available::after {
+  content: "";
+  position: absolute;
+  bottom: 4px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: var(--color-success);
+}
+
+.calendar__day.is-selected.is-available::after {
+  background-color: var(--color-primary-contrast);
+}
+
+.calendar__day.is-unavailable,
+.calendar__day.is-past {
+  color: var(--text-disabled);
+  cursor: not-allowed;
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.calendar__day.is-unavailable:hover,
+.calendar__day.is-past:hover {
+  background-color: transparent;
+}
+
+/* =========================================================================
+   Theme toggle — .theme-toggle (pure CSS sun/moon switch)
+   Markup contract: <button class="theme-toggle" aria-pressed="true|false">
+     <span class="theme-toggle__track"><span class="theme-toggle__thumb">
+     <svg class="theme-toggle__icon-sun">...<svg class="theme-toggle__icon-moon">...
+     </span></span></button>
+   JS toggles [data-theme] on <html> and/or aria-pressed here; CSS reacts to
+   aria-pressed="true" to represent the dark state.
+   ========================================================================= */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--radius-full);
+}
+
+.theme-toggle__track {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  width: 3.25rem;
+  height: 1.75rem;
+  padding: 3px;
+  border-radius: var(--radius-full);
+  background-color: var(--gray-300);
+  transition: background-color var(--transition-base);
+}
+
+.theme-toggle[aria-pressed="true"] .theme-toggle__track {
+  background-color: var(--vipasa-blue-700);
+}
+
+.theme-toggle__thumb {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 50%;
+  background-color: #ffffff;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-base) var(--ease-spring);
+  color: var(--color-warning);
+}
+
+.theme-toggle[aria-pressed="true"] .theme-toggle__thumb {
+  transform: translateX(1.5rem);
+  color: var(--color-tertiary);
+}
+
+.theme-toggle__icon-sun,
+.theme-toggle__icon-moon {
+  position: absolute;
+  /* Flexbox centering on .theme-toggle__thumb (align-items/justify-content)
+     doesn't reliably apply once a child is absolutely positioned — center
+     explicitly instead, otherwise the icon sits offset toward its static
+     flow position and overlaps the thumb's edge. These are <span> text
+     glyphs (☀/☾), which are inline by default — width/height don't apply
+     to inline elements, and an emoji glyph's own ink isn't centered within
+     its line box — so this also needs display:flex + a fixed line-height to
+     actually center the glyph itself, not just the element's box. */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 0.9rem;
+  height: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  line-height: 1;
+  transition: opacity var(--transition-fast);
+}
+
+.theme-toggle__icon-moon { opacity: 0; }
+.theme-toggle[aria-pressed="true"] .theme-toggle__icon-moon { opacity: 1; }
+.theme-toggle[aria-pressed="true"] .theme-toggle__icon-sun { opacity: 0; }
+
+/* =========================================================================
+   Progress steps — .progress-steps (multi-step wizard)
+   ========================================================================= */
+.progress-steps {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.progress-steps__step {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-2);
+}
+
+.progress-steps__step:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 1rem;
+  left: calc(50% + 1.25rem);
+  width: calc(100% - 2.5rem);
+  height: 2px;
+  background-color: var(--border-default);
+  transition: background-color var(--transition-slow);
+  z-index: 0;
+}
+
+.progress-steps__step.is-complete:not(:last-child)::after {
+  background-color: var(--color-primary);
+}
+
+.progress-steps__circle {
+  position: relative;
+  z-index: 1;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  background-color: var(--surface-card);
+  border: 2px solid var(--border-default);
+  color: var(--text-muted);
+  transition: all var(--transition-base);
+}
+
+.progress-steps__step.is-active .progress-steps__circle {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  box-shadow: var(--shadow-focus-ring);
+}
+
+.progress-steps__step.is-complete .progress-steps__circle {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-primary-contrast);
+}
+
+.progress-steps__label {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-muted);
+}
+
+.progress-steps__step.is-active .progress-steps__label {
+  color: var(--text-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+.progress-steps__step.is-complete .progress-steps__label {
+  color: var(--text-secondary);
+}
+
+@media (max-width: 639px) {
+  .progress-steps__label { display: none; }
+  .progress-steps__step.is-active .progress-steps__label {
+    display: block;
+    position: absolute;
+    top: 2.4rem;
+    white-space: nowrap;
+  }
+}
+
+/* =========================================================================
+   Floating glass navigation — .nav-glass
+   ========================================================================= */
+.nav-glass {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-nav);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin: var(--space-4) auto 0;
+  padding: var(--space-3) var(--space-5);
+  max-width: 1200px;
+  border-radius: var(--radius-full);
+  background-color: var(--surface-glass);
+  border: 1px solid var(--surface-glass-border);
+  box-shadow: var(--shadow-glass);
+  backdrop-filter: blur(var(--surface-glass-blur)) saturate(160%);
+  -webkit-backdrop-filter: blur(var(--surface-glass-blur)) saturate(160%);
+  transition: box-shadow var(--transition-base);
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+  .nav-glass {
+    background-color: var(--surface-glass-strong);
+  }
+}
+
+@media (max-width: 639px) {
+  .nav-glass {
+    margin: 0;
+    border-radius: 0;
+    padding: var(--space-3) var(--space-4);
+  }
+}
+
+.nav-glass__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-lg);
+  color: var(--text-primary);
+}
+
+.nav-glass__brand-logo {
+  height: 34px;
+  width: auto;
+  display: block;
+}
+
+/* Theme-aware brand lockup — shared by the sidebar (dashboard-shell.css)
+   and the public nav here: the glowing white version only reads correctly
+   on a dark surface, the navy version only on a light one.
+   Specificity note: these use the `img.brand-logo--*` compound selector
+   (0,1,1) rather than plain `.brand-logo--*` (0,1,0) deliberately — the
+   sidebar/nav sizing rules (.dash-sidebar__brand-logo, .nav-glass__brand-logo)
+   also set `display: block` at (0,1,0), and dashboard-shell.css loads AFTER
+   this file, so equal-specificity rules would let its `display: block` win
+   over this file's `display: none` regardless of theme. The extra element
+   qualifier keeps this toggle authoritative no matter the CSS file order. */
+img.brand-logo--dark { display: none; }
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) img.brand-logo--dark { display: block; }
+  :root:not([data-theme="light"]) img.brand-logo--light { display: none; }
+}
+
+:root[data-theme="dark"] img.brand-logo--dark { display: block; }
+:root[data-theme="dark"] img.brand-logo--light { display: none; }
+
+.nav-glass__links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+}
+
+.nav-glass__link {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-secondary);
+}
+
+.nav-glass__link:hover,
+.nav-glass__link.is-active {
+  color: var(--color-primary);
+}
+
+.nav-glass__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+/* =========================================================================
+   Nav mobile hamburger toggle + dropdown — shared by every page using
+   .nav-glass (not just the landing page). Markup contract:
+     <header class="nav-glass">
+       <div class="nav-glass__brand">...</div>
+       <button class="nav-glass__toggle" data-nav-toggle aria-expanded="false" aria-label="Toggle menu">
+         <span class="nav-glass__toggle-bar"></span> x3
+       </button>
+       <nav class="nav-glass__links">...</nav>
+       <div class="nav-glass__actions">...</div>
+     </header>
+   app.js wires [data-nav-toggle] to toggle .is-open for the dropdown.
+   ========================================================================= */
+.nav-glass__toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 2.25rem;
+  height: 2.25rem;
+  flex: none;
+}
+
+.nav-glass__toggle-bar {
+  display: block;
+  width: 100%;
+  height: 2px;
+  border-radius: var(--radius-full);
+  background-color: var(--text-primary);
+  transition: transform var(--transition-base), opacity var(--transition-base);
+}
+
+.nav-glass.is-open .nav-glass__toggle-bar:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-glass.is-open .nav-glass__toggle-bar:nth-child(2) { opacity: 0; }
+.nav-glass.is-open .nav-glass__toggle-bar:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+@media (max-width: 899px) {
+  .nav-glass__toggle { display: inline-flex; }
+
+  .nav-glass__links {
+    position: absolute;
+    top: calc(100% + var(--space-3));
+    left: var(--space-4);
+    right: var(--space-4);
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-1);
+    padding: var(--space-4);
+    background-color: var(--surface-glass-strong);
+    border: 1px solid var(--surface-glass-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    backdrop-filter: blur(var(--surface-glass-blur)) saturate(160%);
+    -webkit-backdrop-filter: blur(var(--surface-glass-blur)) saturate(160%);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: opacity var(--transition-base), transform var(--transition-base), visibility var(--transition-base);
+  }
+
+  .nav-glass.is-open .nav-glass__links {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .nav-glass__link { width: 100%; padding-block: var(--space-2); }
+}
+
+/* =========================================================================
+   Admin analytics charts — .chart-svg (SVG generated by modules/charts.js)
+   ========================================================================= */
+.chart-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.chart-card__title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-4);
+}
